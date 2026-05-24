@@ -1,0 +1,17 @@
+# Environments
+myenv/
+
+# Datasets
+data/
+keypoints/
+
+# Heavy Files
+videos/*
+!videos/placeholder.txt
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# OS generated files
+.DS_Store
