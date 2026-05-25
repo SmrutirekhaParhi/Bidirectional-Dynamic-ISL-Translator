@@ -1,0 +1,77 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const toggleBtn = document.getElementById("toggle-audio-btn");
+    const videoFeed = document.getElementById("video-feed");
+    const listeningOverlay = document.getElementById("listening-overlay");
+    const playbackVideo = document.getElementById("playback-video");
+    const statusIndicator = document.getElementById("system-status");
+
+    let isProcessing = false;
+
+    // Allow keyboard [A] to trigger the button
+    document.addEventListener('keydown', (event) => {
+        if (event.key.toLowerCase() === 'a' && !isProcessing) {
+            toggleBtn.click();
+        }
+    });
+
+    toggleBtn.addEventListener("click", async () => {
+        if (isProcessing) return;
+        isProcessing = true;
+
+        // 1. Enter Listening Mode
+        videoFeed.style.opacity = "0.3"; // Dim the camera
+        playbackVideo.style.display = "none";
+        listeningOverlay.style.display = "flex";
+        
+        statusIndicator.innerText = "Microphone Active";
+        statusIndicator.className = "status-active";
+        statusIndicator.style.borderColor = "#ff8c00";
+        statusIndicator.style.color = "#ff8c00";
+        toggleBtn.disabled = true;
+
+        try {
+            console.log("Sending request to backend...");
+            // Call the Python backend to start listening
+            const response = await fetch('/listen', { method: 'POST' });
+            const data = await response.json();
+
+            console.log("Backend response received:", data);
+
+            if (data.status === "success") {
+                // 2. Play the Video
+                listeningOverlay.style.display = "none";
+                videoFeed.style.display = "none";
+                playbackVideo.style.display = "block";
+                
+                statusIndicator.innerText = "Playing: " + data.word.toUpperCase();
+                
+                playbackVideo.src = data.video_url;
+                playbackVideo.play();
+
+                // When video finishes, return to camera mode
+                playbackVideo.onended = resetToCameraMode;
+            } else {
+                alert("Speech Result: " + data.message);
+                resetToCameraMode();
+            }
+        } catch (error) {
+            console.error("Error connecting to backend:", error);
+            alert("Error connecting to the microphone backend.");
+            resetToCameraMode();
+        }
+    });
+
+    function resetToCameraMode() {
+        playbackVideo.style.display = "none";
+        listeningOverlay.style.display = "none";
+        videoFeed.style.display = "block";
+        videoFeed.style.opacity = "1";
+        
+        statusIndicator.innerText = "Camera Active";
+        statusIndicator.className = "status-active";
+        statusIndicator.style.borderColor = "#00ff00";
+        statusIndicator.style.color = "#00ff00";
+        toggleBtn.disabled = false;
+        isProcessing = false;
+    }
+});
