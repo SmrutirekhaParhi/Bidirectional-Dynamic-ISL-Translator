@@ -44,7 +44,9 @@ Due to file size constraints and standard repository practices, the raw video fi
 
 ### Step-by-Step Setup
 **1. Clone the repository**
+
 git clone https://github.com/SmrutirekhaParhi/Bidirectional-Dynamic-ISL-Translator.git
+
 cd Bidirectional-Dynamic-ISL-Translator
 
 **2. Create and activate a virtual environment**
@@ -58,31 +60,60 @@ python3 -m venv myenv
 source myenv/bin/activate
 
 **3. Install dependencies**
+
 pip install -r requirements.txt
+
 *(Note: If you encounter issues with PyAudio on Windows, you may need to install it via pipwin: pip install pipwin -> pipwin install pyaudio)*
 
 **4. Run the application**
+
 python app.py
 
 **5. Access the Web UI**
+
 Open your web browser and navigate to: http://localhost:5000
 
 ## Repository Structure
 
-📦 Bidirectional-Dynamic-ISL-Translator
+```text
+ Bidirectional-Dynamic-ISL-Translator
+ ┣ 📂 data/                 # Dataset directory
+ ┃ ┣ 📂 videos/             # Directory for ISL .mp4 dataset files (ignored in repo)
+ ┃ ┃ ┗  placeholder.txt
+ ┃ ┗  .gitkeep
+ ┣ 📂 models/               # Saved model weights and metrics
+ ┃ ┣  action.h5           # Trained Stacked LSTM model
+ ┃ ┣  actions.npy         # NumPy array of the 38 ISL class labels
+ ┃ ┗  training_history.npy
+ ┣ 📂 results/              # Evaluation metrics and performance graphs
+ ┃ ┣  classification_report.txt
+ ┃ ┣  graph_class_distribution.png
+ ┃ ┣  graph_confusion_matrix.png
+ ┃ ┣  graph_per_class_accuracy_vertical.png
+ ┃ ┗  training_curves.png
+ ┣ 📂 src/                  # Core ML pipeline scripts
+ ┃ ┣  evaluate_model.py
+ ┃ ┣  generate_chart.py
+ ┃ ┣  process_data.py
+ ┃ ┗  train_model.py
  ┣ 📂 static/               # CSS and JS files for the frontend
- ┣ 📂 templates/            # HTML files (index.html)
- ┣ 📂 videos/               # Directory for ISL .mp4 dataset files (INCLUDE Dataset)
- ┣ 📜 app.py                # Main Flask server and API endpoints
- ┣ 📜 process_data.py       # Script for MediaPipe extraction and data augmentation
- ┣ 📜 train_model.py        # LSTM neural network training script
- ┣ 📜 test_realtime.py      # OpenCV script for local webcam testing
- ┣ 📜 evaluate_model.py     # Script to generate confusion matrix and accuracy graphs
- ┣ 📜 action.h5             # Trained Stacked LSTM model weights
- ┣ 📜 actions.npy           # NumPy array of the 38 ISL class labels
- ┣ 📜 requirements.txt      # Python dependencies
- ┗ 📜 README.md             # Project documentation
-
+ ┃ ┣  main.js
+ ┃ ┗  style.css
+ ┣ 📂 templates/            # HTML templates for Flask
+ ┃ ┗  index.html
+ ┣ 📂 utils/                # Helper functions and debugging scripts
+ ┃ ┣  check_data.py
+ ┃ ┣  check_setup.py
+ ┃ ┣  debug_path.py
+ ┃ ┣  test_opencv.py
+ ┃ ┣  test_realtime.py
+ ┃ ┗  verify_math.py
+ ┣  .gitignore            # Ignored files and virtual environments
+ ┣  LICENSE               # MIT License
+ ┣  README.md             # Project documentation
+ ┣  app.py                # Main Flask server and API endpoints
+ ┗  requirements.txt      # Python dependencies
+```
 *(Note: Training datasets (`/data`), raw keypoints (`/keypoints`), and video files (`/videos`) have been excluded from this repository due to file size constraints.)*
 
 ## Usage Instructions
