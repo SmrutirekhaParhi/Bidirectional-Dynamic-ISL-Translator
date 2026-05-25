@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bidirectional Indian Sign Language Translator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* CSS Overrides for Light Mode */
+        body { transition: background-color 0.3s, color 0.3s; }
+        
+        body.light-mode {
+            background-color: #f0f2f5;
+            color: #121212;
+        }
+        
+        body.light-mode header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        body.light-mode h1 { color: #2c3e50; }
+        
+        body.light-mode .listening-overlay {
+            background-color: rgba(255, 255, 255, 0.95);
+            color: #121212;
+            border: 1px solid #ddd;
+        }
+
+        body.light-mode footer { background-color: #ffffff; border-top: 1px solid #ddd; }
+        
+        /* Theme Toggle Button Style */
+        .theme-toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: transparent;
+            border: none;
+            color: inherit;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .theme-toggle-btn:hover { transform: scale(1.1); }
+        
+        /* RESPONSIVE VIDEO FIX: Ensures it never crops and always fits the window */
+        #video-feed {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+            aspect-ratio: 4/3;
+            object-fit: contain; 
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    
+    <button id="theme-toggle" class="theme-toggle-btn">
+        <i class="fa-solid fa-sun"></i>
+    </button>
+
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-hands-asl-interpreting"></i>
+                <h1>Bidirectional Indian Sign Language Translator</h1>
+            </div>
+            <div class="status-indicator">
+                <span id="system-status" class="status-active">Camera Active</span>
+            </div>
+        </header>
+
+        <main class="display-container">
+            
+            <img id="video-feed" src="{{ url_for('video_feed') }}" alt="Camera Feed">
+            
+            <div class="listening-overlay" id="listening-overlay" style="display: none;">
+                <div class="mic-pulse">
+                    <i class="fa-solid fa-microphone"></i>
+                </div>
+                <h2>Listening...</h2>
+                <p>Speak English clearly into the microphone.</p>
+            </div>
+
+            <video id="playback-video" style="display: none;" autoplay muted>
+                <source src="" type="video/mp4">
+            </video>
+
+        </main>
+
+        <footer>
+            <div class="instruction">
+                <p>Press <strong>[A]</strong> on your keyboard or click the button to switch to Speech-to-Sign mode.</p>
+            </div>
+            <button id="toggle-audio-btn" class="primary-btn">
+                <i class="fa-solid fa-microphone-lines"></i> Activate Audio Mode
+            </button>
+        </footer>
+    </div>
+
+    <script>
+        const themeBtn = document.getElementById('theme-toggle');
+        const icon = themeBtn.querySelector('i');
+
+        // Check local storage for saved theme preference
+        if(localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode');
+            icon.classList.replace('fa-sun', 'fa-moon');
+        }
+
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            if (document.body.classList.contains('light-mode')) {
+                icon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                icon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    </script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
